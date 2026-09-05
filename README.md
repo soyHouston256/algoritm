@@ -1,23 +1,37 @@
 # Algo
 
-Prototipo en español de un feed de retos interactivos para aprender algoritmos.
+Feed educativo en español con **37 retos**: 34 experiencias guiadas nuevas y los tres juegos originales. Mantiene el diseño oscuro, las pistas recuperables y el avance por scroll.
 
-## Experiencias
+## Ruta
 
-- Número escondido: 1–100, objetivo de siete intentos.
-- Ascensor: 128 pisos, objetivo de ocho paradas.
-- Libros: ordenamiento por selección con pistas recuperables.
+| Etapa | Retos | Contenido |
+| --- | ---: | --- |
+| Desde cero | 6 | Instrucciones, variables, if/else, for, while, funciones |
+| Organiza datos | 7 | Índices, búsqueda lineal, stack, queue, creación/inserción/eliminación en linked lists |
+| Piensa en algoritmos | 7 | Recursión, Big O, merge sort, quicksort, dos búsquedas binarias y ordenamiento por selección |
+| Árboles | 6 | BST, preorder, inorder, postorder, min-heap y trie |
+| Grafos | 5 | Adyacencia, BFS, DFS, Dijkstra y orden topológico |
+| Siguiente nivel | 6 | Hash con colisiones, dos punteros, ventana deslizante, backtracking, programación dinámica y Union–Find |
 
-Cada intento de búsqueda reduce el intervalo visible. El límite habilita práctica ilimitada, sin reiniciar las pistas. El progreso vive en la sesión y se reinicia al recargar. Los secretos iniciales son fijos para una primera experiencia reproducible; «Otro número» elige uno nuevo aleatoriamente. Esta es una experiencia educativa local al navegador, no un concurso seguro.
+Los retos nuevos alternan predicción, cambio visible de estado, pistas en dos niveles y un caso de transferencia. Un reto solo se marca como descubierto después de acertar ese nuevo caso. Las explicaciones de código son fragmentos guiados: no son un editor ni un entorno Python ejecutable.
 
-## Desarrollo
+La ruta introduce una colección amplia de conceptos; no sustituye la práctica de implementación ni garantiza dominio avanzado por completarla. Las etapas no están bloqueadas. El progreso y los pasos sobreviven a los cambios de etapa durante la sesión porque los paneles conservan su estado. **Recargar reinicia el progreso**; no hay cuentas de alumno ni persistencia.
 
-`npm install`, `npm run dev`. Producción: `npm run build`.
+## Arquitectura
 
-## Verificación
+- `lib/course.ts`: módulos, contenido, estados visuales, decisiones y casos de transferencia.
+- `lib/lesson-types.ts`: contrato de contenido.
+- `lib/lesson-engine.mjs`: transiciones de pasos, pistas, errores y comprobación final.
+- `components/course/lesson-card.tsx`: interacción, visualización de árboles/grafos/nodos y código por paso.
+- `components/course/classic.tsx`: retos originales preservados.
+- `app/page.tsx`: navegación accesible por etapas y avance de sesión.
 
-`node --test tests/game.test.mjs` cubre todos los secretos posibles, entradas inválidas y continuidad del modo práctica. `npx tsc --noEmit` verifica tipos.
+## Desarrollo y validación
 
-No se realizó QA visual ni interacción automatizada en navegador. Se registran herramientas WebMCP si el navegador admite `document.modelContext`; su contrato no pudo verificarse en un contexto compatible. La interfaz funciona sin esa API.
+- `npm install` y `npm run dev`.
+- `npm run build` genera la versión publicable.
+- `node --experimental-strip-types --test tests/*.test.mjs` (Node 22.13+): 11 pruebas, incluyendo los 34 recorridos completos, errores recuperables, referencias de diagramas y comparación independiente de BFS/DFS, recorridos de árboles, Dijkstra, orden topológico, linked lists y resultados numéricos.
+- `npx tsc --noEmit` verifica tipos.
+- `npx oxlint app components/course lib/course.ts lib/lesson-types.ts lib/lesson-engine.mjs` verifica el código del producto. El lint global también incluye incidencias preexistentes del scaffold en componentes no modificados.
 
-El lint global del scaffold señala incidencias en componentes UI y hooks preinstalados que no usa esta página; se verifica por separado el código del producto.
+No se realizó QA visual ni interacción automatizada en navegador. La respuesta HTTP local y la compilación fueron verificadas. Se conservan las herramientas WebMCP de las búsquedas originales; su contrato no fue verificado en un contexto de navegador compatible. Toda la interfaz funciona sin esa API.
