@@ -1,6 +1,6 @@
 'use client';
 import { useState } from 'react';
-import { ArrowRight, Check, Compass, Terminal, Zap } from 'lucide-react';
+import { ArrowRight, Check, Code2, Compass, Terminal, Zap } from 'lucide-react';
 import {
   Tabs,
   TabsList,
@@ -9,6 +9,7 @@ import {
 } from '../components/ui/tabs';
 import { Progress } from '../components/ui/progress';
 import { LessonCard } from '../components/course/lesson-card';
+import { LanguagePicker } from '../components/course/code-snippet';
 import {
   BinaryChallenge,
   Books,
@@ -47,11 +48,17 @@ export default function Home() {
         <div className="header-center">
           DE TU PRIMER <span>FOR</span> A TU PRIMER <span>GRAFO.</span>
         </div>
-        <span className="session-progress">
-          <Zap size={16} />
-          {completed.length}/{allLessonIds.length}
-          <span>descubiertos</span>
-        </span>
+        <div className="header-actions">
+          <div className="header-language">
+            <Code2 size={16} aria-hidden="true" />
+            <LanguagePicker />
+          </div>
+          <span className="session-progress">
+            <Zap size={16} />
+            {completed.length}/{allLessonIds.length}
+            <span>descubiertos</span>
+          </span>
+        </div>
       </header>
       <div className="course-nav">
         <TabsList className="course-tabs" aria-label="Etapas de aprendizaje">

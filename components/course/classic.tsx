@@ -12,6 +12,9 @@ import {
 } from 'lucide-react';
 import { flushSync } from 'react-dom';
 import { initialGame, guessNumber } from '../../lib/game.mjs';
+import { codeLanguageInfo, resolveLine } from '../../lib/code-language';
+import { classicSnippets } from '../../lib/course';
+import { CodeBlock, LanguagePicker, useCodeLanguage } from './code-snippet';
 
 type Game = {
   low: number;
@@ -70,6 +73,7 @@ export function BinaryChallenge({
   const [hint, setHint] = useState(false);
   const [error, setError] = useState('');
   const [showCode, setShowCode] = useState(false);
+  const language = useCodeLanguage();
   const ref = useRef<HTMLInputElement>(null);
   const latest = game.attempts.at(-1);
   const middle = Math.floor((game.low + game.high) / 2);
@@ -376,36 +380,28 @@ export function BinaryChallenge({
                 Funciona cuando las posibilidades tienen un orden y la pista
                 indica qué lado conservar.
               </p>
-              <pre>
-                <code>
-                  <span>while inicio &lt;= fin:</span>
-                  {'\n'}
-                  <span> medio = (inicio + fin) // 2</span>
-                  {'\n'}
-                  <span
-                    className={
-                      latest?.direction === 'higher' ? 'active-line' : ''
-                    }
-                  >
-                    {' '}
-                    if medio &lt; secreto: inicio = medio + 1
-                  </span>
-                  {'\n'}
-                  <span
-                    className={
-                      latest?.direction === 'lower' ? 'active-line' : ''
-                    }
-                  >
-                    {' '}
-                    elif medio &gt; secreto: fin = medio - 1
-                  </span>
-                  {'\n'}
-                  <span className={game.won ? 'active-line' : ''}>
-                    {' '}
-                    else: return medio
-                  </span>
-                </code>
-              </pre>
+              <div className="code-toolbar">
+                <p className="code-note">
+                  Fragmento guiado en {codeLanguageInfo(language).label} · se
+                  resalta la rama de tu último intento.
+                </p>
+                <LanguagePicker compact />
+              </div>
+              <CodeBlock
+                lines={classicSnippets.binary.code[language]}
+                language={language}
+                activeLine={resolveLine(
+                  classicSnippets.binary,
+                  language,
+                  game.won
+                    ? 5
+                    : latest?.direction === 'higher'
+                      ? 3
+                      : latest?.direction === 'lower'
+                        ? 4
+                        : undefined,
+                )}
+              />
               <p className="small">
                 Eligiendo siempre el punto medio, bastan como máximo{' '}
                 {config.budget} intentos para {config.max} posibilidades. Con un
@@ -437,6 +433,7 @@ export function Books({
     'Elige el libro más corto para empezar.',
   );
   const [hint, setHint] = useState(false);
+  const language = useCodeLanguage();
   const remaining = books.filter((n) => !sorted.includes(n));
   const done = remaining.length === 0;
   return (
@@ -529,13 +526,16 @@ export function Books({
                 resto. Una computadora hace lo mismo comparando los valores de
                 una lista.
               </p>
-              <pre>
-                <code>
-                  {
-                    'for i in range(len(libros)):\n    menor = i\n    for j in range(i + 1, len(libros)):\n        if libros[j] < libros[menor]:\n            menor = j\n    libros[i], libros[menor] = libros[menor], libros[i]'
-                  }
-                </code>
-              </pre>
+              <div className="code-toolbar">
+                <p className="code-note">
+                  Fragmento guiado en {codeLanguageInfo(language).label}.
+                </p>
+                <LanguagePicker compact />
+              </div>
+              <CodeBlock
+                lines={classicSnippets.books.code[language]}
+                language={language}
+              />
             </div>
           )}
         </div>

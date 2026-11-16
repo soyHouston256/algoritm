@@ -1,4 +1,4 @@
-import type { Lesson, View, Step, Cell } from './lesson-types';
+import type { CodeSnippet, Lesson, View, Step, Cell } from './lesson-types';
 export const modules = [
   {
     id: 'basics',
@@ -94,7 +94,31 @@ export const lessons: Lesson[] = [
       'Una computadora sigue instrucciones concretas, en orden. Lleva el robot desde la casilla 0 hasta la merienda en la casilla 3. Cada avance lo mueve una casilla.',
     takeaway:
       'Un programa es una secuencia de instrucciones. La computadora hace lo que indicas; no adivina el objetivo.',
-    code: 'posicion = 0\nposicion = posicion + 1\nposicion = posicion + 1\nposicion = posicion + 1\ncomer()',
+    snippet: {
+      code: {
+        python: [
+          'posicion = 0',
+          'posicion = posicion + 1',
+          'posicion = posicion + 1',
+          'posicion = posicion + 1',
+          'comer()',
+        ],
+        cpp: [
+          'int posicion = 0;',
+          'posicion = posicion + 1;',
+          'posicion = posicion + 1;',
+          'posicion = posicion + 1;',
+          'comer();',
+        ],
+        go: [
+          'posicion := 0',
+          'posicion = posicion + 1',
+          'posicion = posicion + 1',
+          'posicion = posicion + 1',
+          'comer()',
+        ],
+      },
+    },
     steps: [
       ...[0, 1, 2].map((i) =>
         step(
@@ -144,7 +168,21 @@ export const lessons: Lesson[] = [
       'Una variable es un nombre que usamos para guardar un valor. El monedero empieza con 5 monedas. Vamos a seguir sus cambios.',
     takeaway:
       'El signo = guarda el valor de la derecha en el nombre de la izquierda. En monedas = monedas + 3, primero lees el valor anterior y después lo reemplazas.',
-    code: 'monedas = 5\nmonedas = monedas + 3\nmonedas = monedas - 2',
+    snippet: {
+      code: {
+        python: [
+          'monedas = 5',
+          'monedas = monedas + 3',
+          'monedas = monedas - 2',
+        ],
+        cpp: [
+          'int monedas = 5;',
+          'monedas = monedas + 3;',
+          'monedas = monedas - 2;',
+        ],
+        go: ['monedas := 5', 'monedas = monedas + 3', 'monedas = monedas - 2'],
+      },
+    },
     steps: [
       step(
         'Ejecutamos monedas = 5. ¿Qué valor queda guardado?',
@@ -193,31 +231,59 @@ export const lessons: Lesson[] = [
     title: 'La puerta del cine.',
     accent: 'Una regla decide.',
     description:
-      'En este cine ficticio, una entrada abre la puerta. Un booleano solo tiene dos valores: True (verdadero) o False (falso). if ejecuta una rama según esa condición.',
+      'En este cine ficticio, una entrada abre la puerta. Un booleano solo tiene dos valores: verdadero o falso. if ejecuta una rama según esa condición.',
     takeaway:
       'if comprueba una condición. Si es verdadera ejecuta su bloque; si es falsa, puede ejecutar el bloque else.',
-    code: 'if tiene_entrada:\n    abrir_puerta()\nelse:\n    pedir_entrada()',
+    snippet: {
+      code: {
+        python: [
+          'if tiene_entrada:',
+          '    abrir_puerta()',
+          'else:',
+          '    pedir_entrada()',
+        ],
+        cpp: [
+          'if (tiene_entrada) {',
+          '    abrir_puerta();',
+          '} else {',
+          '    pedir_entrada();',
+          '}',
+        ],
+        go: [
+          'if tiene_entrada {',
+          '    abrir_puerta()',
+          '} else {',
+          '    pedir_entrada()',
+          '}',
+        ],
+      },
+      notes: {
+        python: 'Los booleanos se escriben True y False.',
+        cpp: 'Los booleanos (bool) se escriben true y false.',
+        go: 'Los booleanos (bool) se escriben true y false.',
+      },
+    },
     steps: [
       step(
-        'Ana tiene entrada: tiene_entrada = True. ¿Qué sucede?',
+        'Ana tiene entrada: tiene_entrada es verdadero. ¿Qué sucede?',
         ['Abrir la puerta', 'Pedir entrada'],
         'Abrir la puerta',
-        stats({ persona: 'Ana', tiene_entrada: 'True' }),
+        stats({ persona: 'Ana', tiene_entrada: 'verdadero' }),
         stats({ persona: 'Ana', puerta: 'Abierta' }),
-        'True entra en el bloque del if.',
+        'Una condición verdadera entra en el bloque del if.',
         [
-          'True significa que sí se cumple la condición.',
+          'Verdadero significa que sí se cumple la condición.',
           'La rama verdadera ejecuta abrir_puerta().',
         ],
         2,
       ),
       step(
-        'Luis no tiene entrada: tiene_entrada = False. ¿Qué sucede?',
+        'Luis no tiene entrada: tiene_entrada es falso. ¿Qué sucede?',
         ['Abrir la puerta', 'Pedir entrada'],
         'Pedir entrada',
-        stats({ persona: 'Luis', tiene_entrada: 'False' }),
+        stats({ persona: 'Luis', tiene_entrada: 'falso' }),
         stats({ persona: 'Luis', acción: 'Pedir entrada' }),
-        'False toma la alternativa else.',
+        'Una condición falsa toma la alternativa else.',
         [
           'No se cumple la condición de entrada.',
           'El bloque else llama a pedir_entrada().',
@@ -228,10 +294,10 @@ export const lessons: Lesson[] = [
     transfer: {
       prompt:
         'Si saldo = 4, ¿se cumple saldo >= 5? (>= significa mayor o igual).',
-      choices: ['True', 'False'],
+      choices: ['Verdadero', 'Falso'],
       answer: 1,
       explanation:
-        '4 no es mayor o igual que 5, así que la comparación produce False.',
+        '4 no es mayor o igual que 5, así que la comparación es falsa.',
     },
   },
   {
@@ -241,10 +307,38 @@ export const lessons: Lesson[] = [
     title: 'Tres plantas sedientas.',
     accent: 'Una instrucción que se repite.',
     description:
-      'Un bucle repite instrucciones. En Python, range(3) produce 0, 1 y 2: empieza en 0 y no incluye el 3. En cada vuelta, i toma el siguiente valor.',
+      'Un bucle repite instrucciones. Aquí i empieza en 0 y el bucle se detiene antes de llegar a 3: produce 0, 1 y 2. En cada vuelta, i toma el siguiente valor.',
     takeaway:
-      'for recorre una secuencia. El cuerpo indentado se ejecuta una vez por cada elemento. range(n) realiza n vueltas, desde 0 hasta n − 1.',
-    code: 'regadas = 0\nfor i in range(3):\n    regar(i)\n    regadas = regadas + 1',
+      'for repite su cuerpo una vez por cada valor de la secuencia. Contar desde 0 mientras i < n realiza n vueltas, desde 0 hasta n − 1.',
+    snippet: {
+      code: {
+        python: [
+          'regadas = 0',
+          'for i in range(3):',
+          '    regar(i)',
+          '    regadas = regadas + 1',
+        ],
+        cpp: [
+          'int regadas = 0;',
+          'for (int i = 0; i < 3; i++) {',
+          '    regar(i);',
+          '    regadas = regadas + 1;',
+          '}',
+        ],
+        go: [
+          'regadas := 0',
+          'for i := 0; i < 3; i++ {',
+          '    regar(i)',
+          '    regadas = regadas + 1',
+          '}',
+        ],
+      },
+      notes: {
+        python: 'range(3) produce 0, 1 y 2: el 3 no se incluye.',
+        cpp: 'La condición i < 3 detiene el bucle antes de llegar a 3.',
+        go: 'La condición i < 3 detiene el bucle antes de llegar a 3.',
+      },
+    },
     steps: [
       ...[0, 1, 2].map((i) =>
         step(
@@ -278,16 +372,17 @@ export const lessons: Lesson[] = [
         'No, el bucle termina',
         stats({ secuencia: '0 → 1 → 2', regadas: '3' }),
         stats({ estado: 'Bucle terminado', regadas: '3' }),
-        'range(3) excluye el 3. Ejecutamos tres vueltas en total.',
+        'El límite 3 no se incluye. Ejecutamos tres vueltas en total.',
         [
-          'El límite final de range no se incluye.',
+          'El límite final del bucle no se incluye.',
           'Los únicos valores de i son 0, 1 y 2.',
         ],
         2,
       ),
     ],
     transfer: {
-      prompt: '¿Cuántas veces se ejecuta el cuerpo de for i in range(5)?',
+      prompt:
+        '¿Cuántas veces se ejecuta el cuerpo de un for que empieza en i = 0 y continúa mientras i < 5?',
       choices: ['4 veces', '5 veces', '6 veces'],
       answer: 1,
       explanation: 'i toma 0, 1, 2, 3 y 4: cinco valores, cinco vueltas.',
@@ -303,14 +398,37 @@ export const lessons: Lesson[] = [
       'while repite un bloque mientras su condición sea verdadera. La batería empieza en 40 y cada carga suma 20. < significa menor que.',
     takeaway:
       'while vuelve a comprobar su condición antes de cada vuelta. Si el cuerpo nunca cambia lo necesario para volverla falsa, el bucle puede no terminar.',
-    code: 'bateria = 40\nwhile bateria < 100:\n    bateria = bateria + 20',
+    snippet: {
+      code: {
+        python: [
+          'bateria = 40',
+          'while bateria < 100:',
+          '    bateria = bateria + 20',
+        ],
+        cpp: [
+          'int bateria = 40;',
+          'while (bateria < 100) {',
+          '    bateria = bateria + 20;',
+          '}',
+        ],
+        go: [
+          'bateria := 40',
+          'for bateria < 100 {',
+          '    bateria = bateria + 20',
+          '}',
+        ],
+      },
+      notes: {
+        go: 'Go no tiene while: un for con solo una condición cumple ese papel.',
+      },
+    },
     steps: [
       ...[40, 60, 80].map((n) =>
         step(
           `La batería está en ${n}. Como ${n} < 100, cargamos una vez. ¿En cuánto queda?`,
           [n, n + 20, 100 + n],
           n + 20,
-          stats({ bateria: `${n}%`, condición: `${n} < 100 → True` }),
+          stats({ bateria: `${n}%`, condición: `${n} < 100 → verdadero` }),
           stats({ bateria: `${n + 20}%` }),
           `La batería cambia a ${n + 20}; ahora se volverá a comprobar la condición.`,
           ['Esta vuelta suma 20 al valor actual.', `${n} + 20 = ${n + 20}.`],
@@ -324,7 +442,7 @@ export const lessons: Lesson[] = [
         stats({ bateria: '100%', condición: '100 < 100' }),
         stats({ bateria: '100%', estado: 'Fin del bucle' }),
         '100 no es menor que 100. La condición es falsa y el bucle termina.',
-        ['Menor que no incluye la igualdad.', '100 < 100 es False.'],
+        ['Menor que no incluye la igualdad.', '100 < 100 es falso.'],
         2,
       ),
     ],
@@ -350,7 +468,32 @@ export const lessons: Lesson[] = [
       'Una función agrupa instrucciones para reutilizarlas. El parámetro n recibe un valor y return devuelve el resultado. * significa multiplicar.',
     takeaway:
       'Definir una función no la ejecuta. Al llamarla, sus parámetros reciben los argumentos y return entrega un resultado a quien la llamó.',
-    code: 'def doble(n):\n    return n * 2\n\nresultado = doble(4)',
+    snippet: {
+      code: {
+        python: [
+          'def doble(n):',
+          '    return n * 2',
+          '',
+          'resultado = doble(4)',
+        ],
+        cpp: [
+          'int doble(int n) {',
+          '    return n * 2;',
+          '}',
+          'int resultado = doble(4);',
+        ],
+        go: [
+          'func doble(n int) int {',
+          '    return n * 2',
+          '}',
+          'var resultado = doble(4)',
+        ],
+      },
+      notes: {
+        cpp: 'int antes del nombre indica el tipo que devuelve la función.',
+        go: 'El int después de los paréntesis indica el tipo que devuelve la función.',
+      },
+    },
     steps: [
       step(
         'Llamas a doble(4). ¿Qué valor recibe n?',
@@ -388,7 +531,7 @@ export const lessons: Lesson[] = [
     ],
     transfer: {
       prompt:
-        'Solo escribes def doble(n): return n * 2, sin llamarla. ¿Ya calculó doble(4)?',
+        'Solo defines la función doble, que devuelve n * 2, sin llamarla. ¿Ya calculó doble(4)?',
       choices: ['Sí', 'No'],
       answer: 1,
       explanation:
@@ -402,10 +545,32 @@ export const lessons: Lesson[] = [
     title: 'Casilleros numerados.',
     accent: 'Empieza contando desde cero.',
     description:
-      'Una lista guarda valores en posiciones. El índice es el número de una posición y en Python empieza en 0. Aquí, objetos[1] lee el segundo casillero.',
+      'Una lista guarda valores en posiciones. El índice es el número de una posición y en Python, C++ y Go empieza en 0. Aquí, objetos[1] lee el segundo casillero.',
     takeaway:
       'El índice identifica la posición, no el valor. Una lista de longitud n tiene índices desde 0 hasta n − 1.',
-    code: 'objetos = ["Llave", "Libro", "Mapa", "Agua"]\nsegundo = objetos[1]\nobjetos[2] = "Brújula"',
+    snippet: {
+      code: {
+        python: [
+          'objetos = ["Llave", "Libro", "Mapa", "Agua"]',
+          'segundo = objetos[1]',
+          'objetos[2] = "Brújula"',
+        ],
+        cpp: [
+          'std::vector<std::string> objetos = {"Llave", "Libro", "Mapa", "Agua"};',
+          'std::string segundo = objetos[1];',
+          'objetos[2] = "Brújula";',
+        ],
+        go: [
+          'objetos := []string{"Llave", "Libro", "Mapa", "Agua"}',
+          'segundo := objetos[1]',
+          'objetos[2] = "Brújula"',
+        ],
+      },
+      notes: {
+        cpp: 'std::vector es el array dinámico de C++.',
+        go: 'Un slice ([]string) es la lista dinámica de Go.',
+      },
+    },
     steps: [
       step(
         '¿Qué objeto devuelve objetos[1]?',
@@ -454,7 +619,32 @@ export const lessons: Lesson[] = [
       'Los cajones no están ordenados. Revisa de izquierda a derecha hasta encontrar la llave; no puedes descartar una mitad solo por mirar un cajón.',
     takeaway:
       'La búsqueda lineal compara un elemento a la vez. Si encuentra el objetivo se detiene; si no, puede revisar todos.',
-    code: 'for i in range(len(cajones)):\n    if cajones[i] == "Llave":\n        return i\nreturn -1',
+    snippet: {
+      code: {
+        python: [
+          'for i in range(len(cajones)):',
+          '    if cajones[i] == "Llave":',
+          '        return i',
+          'return -1',
+        ],
+        cpp: [
+          'for (int i = 0; i < (int)cajones.size(); i++) {',
+          '    if (cajones[i] == "Llave") {',
+          '        return i;',
+          '    }',
+          '}',
+          'return -1;',
+        ],
+        go: [
+          'for i := range cajones {',
+          '    if cajones[i] == "Llave" {',
+          '        return i',
+          '    }',
+          '}',
+          'return -1',
+        ],
+      },
+    },
     steps: ['Goma', 'Clip', 'Llave'].map((item, i) =>
       step(
         `Revisas el cajón ${i} y encuentras ${item}. ¿Qué haces?`,
@@ -502,7 +692,33 @@ export const lessons: Lesson[] = [
       'Dibujaste un círculo, un cuadrado y una estrella, en ese orden. Deshacer usa una pila: solo puedes retirar el elemento de arriba, el más reciente.',
     takeaway:
       'Una pila agrega con push y retira con pop por el mismo extremo. LIFO significa último en entrar, primero en salir.',
-    code: 'historial = ["Círculo", "Cuadrado", "Estrella"]\nultimo = historial.pop()',
+    snippet: {
+      code: {
+        python: [
+          'historial = ["Círculo", "Cuadrado", "Estrella"]',
+          'ultimo = historial.pop()',
+        ],
+        cpp: [
+          'std::vector<std::string> historial = {"Círculo", "Cuadrado", "Estrella"};',
+          'std::string ultimo = historial.back();',
+          'historial.pop_back();',
+        ],
+        go: [
+          'historial := []string{"Círculo", "Cuadrado", "Estrella"}',
+          'ultimo := historial[len(historial)-1]',
+          'historial = historial[:len(historial)-1]',
+        ],
+      },
+      lineMap: {
+        cpp: { 2: 3 },
+        go: { 2: 3 },
+      },
+      notes: {
+        python: 'pop() quita y devuelve el último elemento.',
+        cpp: 'back() lee la cima y pop_back() la retira. std::stack ofrece top() y pop().',
+        go: 'El slice actúa como pila: se lee el último elemento y después se recorta.',
+      },
+    },
     steps: ['Estrella', 'Cuadrado', 'Círculo'].map((name, i) => {
       const list = ['Círculo', 'Cuadrado', 'Estrella'].slice(0, 3 - i);
       return step(
@@ -540,8 +756,36 @@ export const lessons: Lesson[] = [
     description:
       'Ana llegó primero, luego Bruno y al final Carla. Una cola atiende a quien lleva más tiempo esperando. Los nuevos llegan al final.',
     takeaway:
-      'Una cola agrega por el final y retira por el frente. FIFO significa primero en entrar, primero en salir. En Python, deque permite hacerlo eficientemente.',
-    code: 'from collections import deque\nfila = deque(["Ana", "Bruno", "Carla"])\natendido = fila.popleft()',
+      'Una cola agrega por el final y retira por el frente. FIFO significa primero en entrar, primero en salir.',
+    snippet: {
+      code: {
+        python: [
+          'from collections import deque',
+          'fila = deque(["Ana", "Bruno", "Carla"])',
+          'atendido = fila.popleft()',
+        ],
+        cpp: [
+          '#include <deque>',
+          'std::deque<std::string> fila = {"Ana", "Bruno", "Carla"};',
+          'std::string atendido = fila.front();',
+          'fila.pop_front();',
+        ],
+        go: [
+          'fila := []string{"Ana", "Bruno", "Carla"}',
+          'atendido := fila[0]',
+          'fila = fila[1:]',
+        ],
+      },
+      lineMap: {
+        cpp: { 3: 4 },
+      },
+      notes: {
+        python:
+          'deque permite retirar del frente en O(1); una lista normal tendría que desplazar los elementos.',
+        cpp: 'std::deque retira del frente en O(1). std::queue lo envuelve con push(), front() y pop().',
+        go: 'fila[1:] recorta el frente en O(1) sin copiar; append agrega al final.',
+      },
+    },
     steps: ['Ana', 'Bruno', 'Carla'].map((name, i) => {
       const list = ['Ana', 'Bruno', 'Carla'].slice(i);
       return step(
@@ -561,7 +805,7 @@ export const lessons: Lesson[] = [
       answer: 2,
       explanation: 'Diego entra al final; Bruno ya estaba esperando antes.',
     },
-    cost: 'En deque, agregar al final y retirar del frente: O(1).',
+    cost: 'Con una estructura adecuada (deque o slice), agregar al final y retirar del frente: O(1).',
   },
 ];
 
@@ -588,10 +832,51 @@ lessons.push(
     title: 'Una playlist enlazada.',
     accent: 'Cada canción sabe quién sigue.',
     description:
-      'Un nodo guarda un dato y una referencia next al siguiente nodo. Construye A → B → C. head es una referencia al primer nodo; None significa que no hay nodo.',
+      'Un nodo guarda un dato y una referencia next al siguiente nodo. Construye A → B → C. head es una referencia al primer nodo; un valor nulo (None, nullptr o nil) significa que no hay nodo.',
     takeaway:
-      'Una lista enlazada no necesita posiciones consecutivas. Para recorrerla, empiezas en head y sigues referencias next hasta None.',
-    code: 'class Nodo:\n    def __init__(self, dato):\n        self.dato = dato\n        self.next = None\n\na, b, c = Nodo("A"), Nodo("B"), Nodo("C")\nhead = a\na.next = b\nb.next = c',
+      'Una lista enlazada no necesita posiciones consecutivas. Para recorrerla, empiezas en head y sigues referencias next hasta llegar a un valor nulo.',
+    snippet: {
+      code: {
+        python: [
+          'class Nodo:',
+          '    def __init__(self, dato):',
+          '        self.dato = dato',
+          '        self.next = None',
+          '',
+          'a, b, c = Nodo("A"), Nodo("B"), Nodo("C")',
+          'head = a',
+          'a.next = b',
+          'b.next = c',
+        ],
+        cpp: [
+          'struct Nodo {',
+          '    std::string dato;',
+          '    Nodo* next = nullptr;',
+          '    explicit Nodo(std::string d) : dato(d) {}',
+          '};',
+          'Nodo *a = new Nodo("A"), *b = new Nodo("B"), *c = new Nodo("C");',
+          'Nodo* head = a;',
+          'a->next = b;',
+          'b->next = c;',
+        ],
+        go: [
+          'type Nodo struct {',
+          '    dato string',
+          '    next *Nodo',
+          '}',
+          '',
+          'a, b, c := &Nodo{dato: "A"}, &Nodo{dato: "B"}, &Nodo{dato: "C"}',
+          'head := a',
+          'a.next = b',
+          'b.next = c',
+        ],
+      },
+      notes: {
+        python: 'None marca que no hay siguiente nodo.',
+        cpp: 'Los nodos se manejan con punteros: a->next equivale a a.next. nullptr marca que no hay siguiente.',
+        go: 'nil marca que no hay siguiente. Go usa a.next aunque a sea un puntero.',
+      },
+    },
     steps: [
       step(
         '¿A qué nodo debe apuntar head para reproducir A primero?',
@@ -633,9 +918,9 @@ lessons.push(
             ['A', 'B', 'C'],
             'C',
           ),
-          stats: { head: 'A', 'c.next': 'None' },
+          stats: { head: 'A', 'c.next': '∅' },
         },
-        'A → B → C → None. C conserva next = None.',
+        'A → B → C → ∅. C conserva next vacío.',
         ['B debe llevarte a C.', 'Asigna c a b.next.'],
         9,
       ),
@@ -659,7 +944,16 @@ lessons.push(
       'Tienes A → C y quieres insertar B entre ambos. El nodo b ya existe. Primero enlaza B al sucesor de A y después conecta A con B.',
     takeaway:
       'Al insertar, preserva la referencia al resto antes de reemplazar el enlace original. Si ya tienes el nodo anterior, basta con cambiar dos referencias.',
-    code: 'b.next = a.next\na.next = b',
+    snippet: {
+      code: {
+        python: ['b.next = a.next', 'a.next = b'],
+        cpp: ['b->next = a->next;', 'a->next = b;'],
+        go: ['b.next = a.next', 'a.next = b'],
+      },
+      notes: {
+        cpp: 'Con punteros, a->next equivale a a.next.',
+      },
+    },
     steps: [
       step(
         '¿Qué referencia debes guardar primero para no perder el camino hacia C?',
@@ -725,7 +1019,31 @@ lessons.push(
       'En A → B → C, quieres quitar B del recorrido. La variable a ya apunta al nodo anterior. No hace falta mover el dato de C.',
     takeaway:
       'Eliminar un nodo intermedio consiste en enlazar su anterior con su sucesor. Quitar la cabeza requiere actualizar head.',
-    code: 'a.next = a.next.next\n# Para quitar la cabeza:\nhead = head.next',
+    snippet: {
+      code: {
+        python: [
+          'a.next = a.next.next',
+          '# Para quitar la cabeza:',
+          'head = head.next',
+        ],
+        cpp: [
+          'a->next = a->next->next;',
+          '// Para quitar la cabeza:',
+          'head = head->next;',
+        ],
+        go: [
+          'a.next = a.next.next',
+          '// Para quitar la cabeza:',
+          'head = head.next',
+        ],
+      },
+      notes: {
+        python:
+          'El recolector de basura libera el nodo cuando nadie lo referencia.',
+        cpp: 'En C++ también debes liberar con delete el nodo que ya no usas.',
+        go: 'El recolector de basura libera el nodo cuando nadie lo referencia.',
+      },
+    },
     steps: [
       step(
         'a.next es B. ¿A qué nodo apunta a.next.next?',
@@ -752,7 +1070,7 @@ lessons.push(
       ),
       step(
         '¿Qué asignación deja A → C?',
-        ['a.next = a.next.next', 'a.next = None', 'a.next.next = a'],
+        ['a.next = a.next.next', 'a.next = nulo', 'a.next.next = a'],
         'a.next = a.next.next',
         chain(
           [
@@ -772,7 +1090,7 @@ lessons.push(
     transfer: {
       prompt:
         'En head → A → C, quieres quitar A, el primer nodo. ¿Qué actualizas?',
-      choices: ['head = head.next', 'Solo a.next = None'],
+      choices: ['head = head.next', 'Solo a.next = nulo'],
       answer: 0,
       explanation:
         'Al quitar la cabeza, la referencia de entrada debe apuntar al siguiente nodo.',
@@ -791,7 +1109,34 @@ lessons.push(
       'Una función recursiva se llama a sí misma con un problema más pequeño. Calcula la suma de 1 hasta 3: suma(3) = 3 + suma(2). El caso base suma(0) devuelve 0.',
     takeaway:
       'La recursión necesita un caso base y llamadas que se acerquen a él. Las llamadas pendientes se resuelven al regresar, como una pila.',
-    code: 'def suma(n):\n    if n == 0:\n        return 0\n    return n + suma(n - 1)',
+    snippet: {
+      code: {
+        python: [
+          'def suma(n):',
+          '    if n == 0:',
+          '        return 0',
+          '    return n + suma(n - 1)',
+        ],
+        cpp: [
+          'int suma(int n) {',
+          '    if (n == 0)',
+          '        return 0;',
+          '    return n + suma(n - 1);',
+          '}',
+        ],
+        go: [
+          'func suma(n int) int {',
+          '    if n == 0 {',
+          '        return 0',
+          '    }',
+          '    return n + suma(n-1)',
+          '}',
+        ],
+      },
+      lineMap: {
+        go: { 4: 5 },
+      },
+    },
     steps: [
       step(
         'suma(3) deja pendiente sumar 3. ¿Qué llamada abre ahora?',
@@ -850,7 +1195,44 @@ lessons.push(
       'Big O describe cómo crece el trabajo al aumentar los datos; no mide segundos exactos. Compara consultar una posición, revisar toda una lista y comparar cada par.',
     takeaway:
       'O(1) no crece con n; O(n) crece linealmente; O(n²) puede cuadruplicar el trabajo al duplicar n. O(log n) aparece al reducir repetidamente por un factor constante.',
-    code: 'valor = datos[0]          # O(1)\nfor x in datos:           # O(n)\n    visitar(x)\nfor x in datos:           # O(n²)\n    for y in datos:\n        comparar(x, y)',
+    snippet: {
+      code: {
+        python: [
+          'valor = datos[0]          # O(1)',
+          'for x in datos:           # O(n)',
+          '    visitar(x)',
+          'for x in datos:           # O(n²)',
+          '    for y in datos:',
+          '        comparar(x, y)',
+        ],
+        cpp: [
+          'int valor = datos[0];          // O(1)',
+          'for (int x : datos) {          // O(n)',
+          '    visitar(x);',
+          '}',
+          'for (int x : datos) {          // O(n²)',
+          '    for (int y : datos) {',
+          '        comparar(x, y);',
+          '    }',
+          '}',
+        ],
+        go: [
+          'valor := datos[0]          // O(1)',
+          'for _, x := range datos {  // O(n)',
+          '    visitar(x)',
+          '}',
+          'for _, x := range datos {  // O(n²)',
+          '    for _, y := range datos {',
+          '        comparar(x, y)',
+          '    }',
+          '}',
+        ],
+      },
+      lineMap: {
+        cpp: { 6: 7 },
+        go: { 6: 7 },
+      },
+    },
     steps: [
       step(
         'Una lista pasa de 10 a 10000 elementos. Leer datos[0] en un array requiere…',
@@ -906,7 +1288,53 @@ lessons.push(
       'Combina [2, 5] y [1, 4]. Solo necesitas comparar el primer elemento disponible de cada fila y sacar el menor. Merge sort obtiene esas filas dividiendo y ordenando recursivamente.',
     takeaway:
       'Merge sort divide hasta listas pequeñas y combina mitades ordenadas. La combinación visita cada elemento una vez por nivel.',
-    code: 'while izquierda and derecha:\n    if izquierda[0] <= derecha[0]:\n        salida.append(izquierda.pop(0))\n    else:\n        salida.append(derecha.pop(0))\nsalida.extend(izquierda or derecha)',
+    snippet: {
+      code: {
+        python: [
+          'while izquierda and derecha:',
+          '    if izquierda[0] <= derecha[0]:',
+          '        salida.append(izquierda.pop(0))',
+          '    else:',
+          '        salida.append(derecha.pop(0))',
+          'salida.extend(izquierda or derecha)',
+        ],
+        cpp: [
+          'size_t i = 0, j = 0;',
+          'while (i < izquierda.size() && j < derecha.size()) {',
+          '    if (izquierda[i] <= derecha[j]) {',
+          '        salida.push_back(izquierda[i++]);',
+          '    } else {',
+          '        salida.push_back(derecha[j++]);',
+          '    }',
+          '}',
+          'salida.insert(salida.end(), izquierda.begin() + i, izquierda.end());',
+          'salida.insert(salida.end(), derecha.begin() + j, derecha.end());',
+        ],
+        go: [
+          'for len(izquierda) > 0 && len(derecha) > 0 {',
+          '    if izquierda[0] <= derecha[0] {',
+          '        salida = append(salida, izquierda[0])',
+          '        izquierda = izquierda[1:]',
+          '    } else {',
+          '        salida = append(salida, derecha[0])',
+          '        derecha = derecha[1:]',
+          '    }',
+          '}',
+          'salida = append(salida, izquierda...)',
+          'salida = append(salida, derecha...)',
+        ],
+      },
+      lineMap: {
+        cpp: { 3: 4, 5: 6, 6: 9 },
+        go: { 5: 6, 6: 10 },
+      },
+      notes: {
+        python:
+          'El fragmento usa pop(0) para enseñar; en listas Python ese desplazamiento es O(n). Con índices se evita.',
+        cpp: 'Los índices i y j avanzan sin borrar elementos: cada paso es O(1).',
+        go: 'Recortar con izquierda[1:] avanza la cabeza en O(1) sin copiar.',
+      },
+    },
     steps: [
       step(
         'Cabezas disponibles: 2 y 1. ¿Qué sacas primero?',
@@ -957,7 +1385,7 @@ lessons.push(
       explanation:
         'Si hay un elemento menor escondido detrás de una cabeza, la combinación no garantiza el orden.',
     },
-    cost: 'Merge sort con índices: O(n log n) tiempo y O(n) espacio auxiliar. El fragmento usa pop(0) para enseñar; en listas Python ese desplazamiento es O(n).',
+    cost: 'Merge sort con índices: O(n log n) tiempo y O(n) espacio auxiliar.',
   },
   {
     id: 'quicksort',
@@ -969,7 +1397,60 @@ lessons.push(
       'El pivote es 4. Clasifica [7, 2, 4, 1, 6] en menores, iguales y mayores. Una partición separa los grupos; todavía falta ordenar cada lado.',
     takeaway:
       'Quicksort particiona respecto a un pivote y ordena recursivamente los lados. Un pivote desafortunado repetidamente puede producir particiones muy desequilibradas.',
-    code: 'def quicksort(datos):\n    if len(datos) <= 1: return datos\n    pivote = datos[len(datos) // 2]\n    menores = [x for x in datos if x < pivote]\n    iguales = [x for x in datos if x == pivote]\n    mayores = [x for x in datos if x > pivote]\n    return quicksort(menores) + iguales + quicksort(mayores)',
+    snippet: {
+      code: {
+        python: [
+          'def quicksort(datos):',
+          '    if len(datos) <= 1: return datos',
+          '    pivote = datos[len(datos) // 2]',
+          '    menores = [x for x in datos if x < pivote]',
+          '    iguales = [x for x in datos if x == pivote]',
+          '    mayores = [x for x in datos if x > pivote]',
+          '    return quicksort(menores) + iguales + quicksort(mayores)',
+        ],
+        cpp: [
+          'std::vector<int> quicksort(const std::vector<int>& datos) {',
+          '    if (datos.size() <= 1) return datos;',
+          '    int pivote = datos[datos.size() / 2];',
+          '    std::vector<int> menores, iguales, mayores;',
+          '    for (int x : datos) {',
+          '        if (x < pivote) menores.push_back(x);',
+          '        else if (x == pivote) iguales.push_back(x);',
+          '        else mayores.push_back(x);',
+          '    }',
+          '    std::vector<int> salida = quicksort(menores);',
+          '    salida.insert(salida.end(), iguales.begin(), iguales.end());',
+          '    std::vector<int> derecha = quicksort(mayores);',
+          '    salida.insert(salida.end(), derecha.begin(), derecha.end());',
+          '    return salida;',
+          '}',
+        ],
+        go: [
+          'func quicksort(datos []int) []int {',
+          '    if len(datos) <= 1 {',
+          '        return datos',
+          '    }',
+          '    pivote := datos[len(datos)/2]',
+          '    var menores, iguales, mayores []int',
+          '    for _, x := range datos {',
+          '        if x < pivote {',
+          '            menores = append(menores, x)',
+          '        } else if x == pivote {',
+          '            iguales = append(iguales, x)',
+          '        } else {',
+          '            mayores = append(mayores, x)',
+          '        }',
+          '    }',
+          '    salida := append(quicksort(menores), iguales...)',
+          '    return append(salida, quicksort(mayores)...)',
+          '}',
+        ],
+      },
+      lineMap: {
+        cpp: { 4: 6, 5: 7, 6: 8 },
+        go: { 4: 9, 5: 11, 6: 13 },
+      },
+    },
     steps: [7, 2, 4, 1, 6].map((n, i) => {
       const prev = [7, 2, 4, 1, 6].slice(0, i),
         next = [...prev, n];
@@ -1045,7 +1526,44 @@ lessons.push({
     'En este BST no hay duplicados. Todos los valores del subárbol izquierdo son menores que su raíz; los del derecho, mayores. Busca 5 empezando en 4.',
   takeaway:
     'Un BST permite decidir una rama según la comparación. Su rendimiento depende de la altura: sin equilibrio puede parecerse a una lista.',
-  code: 'def buscar(nodo, objetivo):\n    if nodo is None: return None\n    if objetivo == nodo.dato: return nodo\n    if objetivo < nodo.dato:\n        return buscar(nodo.izquierda, objetivo)\n    return buscar(nodo.derecha, objetivo)',
+  snippet: {
+    code: {
+      python: [
+        'def buscar(nodo, objetivo):',
+        '    if nodo is None: return None',
+        '    if objetivo == nodo.dato: return nodo',
+        '    if objetivo < nodo.dato:',
+        '        return buscar(nodo.izquierda, objetivo)',
+        '    return buscar(nodo.derecha, objetivo)',
+      ],
+      cpp: [
+        'Nodo* buscar(Nodo* nodo, int objetivo) {',
+        '    if (nodo == nullptr) return nullptr;',
+        '    if (objetivo == nodo->dato) return nodo;',
+        '    if (objetivo < nodo->dato)',
+        '        return buscar(nodo->izquierda, objetivo);',
+        '    return buscar(nodo->derecha, objetivo);',
+        '}',
+      ],
+      go: [
+        'func buscar(nodo *Nodo, objetivo int) *Nodo {',
+        '    if nodo == nil {',
+        '        return nil',
+        '    }',
+        '    if objetivo == nodo.dato {',
+        '        return nodo',
+        '    }',
+        '    if objetivo < nodo.dato {',
+        '        return buscar(nodo.izquierda, objetivo)',
+        '    }',
+        '    return buscar(nodo.derecha, objetivo)',
+        '}',
+      ],
+    },
+    lineMap: {
+      go: { 3: 6, 5: 9, 6: 11 },
+    },
+  },
   steps: [
     step(
       'Buscas 5 y estás en 4. ¿Qué rama sigues?',
@@ -1072,7 +1590,7 @@ lessons.push({
     ),
     step(
       'Llegaste a 5. ¿Continúas bajando?',
-      ['No, encontrado', 'Sí, siempre hay que llegar a None'],
+      ['No, encontrado', 'Sí, siempre hay que llegar a un enlace vacío'],
       'No, encontrado',
       tree(['4', '6'], '5'),
       tree(['4', '6', '5']),
@@ -1143,7 +1661,30 @@ for (const [id, concept, rule, order, lines] of [
         : id === 'preorder'
           ? 'Preorder registra la raíz antes que sus descendientes: raíz, izquierda y derecha. Es un recorrido; no ordena cualquier conjunto de datos.'
           : 'Postorder registra cada raíz después de sus descendientes. Resulta útil cuando un padre necesita primero los resultados de sus hijos.',
-    code: `def recorrer(nodo):\n    if nodo is None: return\n${lines.map((x) => '    ' + x).join('\n')}`,
+    snippet: {
+      code: {
+        python: [
+          'def recorrer(nodo):',
+          '    if nodo is None: return',
+          ...lines.map((x) => '    ' + x),
+        ],
+        cpp: [
+          'void recorrer(Nodo* nodo) {',
+          '    if (nodo == nullptr) return;',
+          ...lines.map((x) => '    ' + x.replace('.', '->') + ';'),
+          '}',
+        ],
+        go: [
+          'func recorrer(nodo *Nodo) {',
+          '    if nodo == nil {',
+          '        return',
+          '    }',
+          ...lines.map((x) => '    ' + x),
+          '}',
+        ],
+      },
+      lineMap: { go: { 3: 5, 4: 6, 5: 7 } },
+    },
     steps: order.map((n, i) =>
       step(
         i === 0
@@ -1196,10 +1737,52 @@ lessons.push(
       'Un min-heap es un árbol binario completo: se llena por niveles, de izquierda a derecha. Cada padre es menor o igual que sus hijos. Insertas prioridad 1 al final de [2, 4, 7, 8]; un número menor significa más urgencia.',
     takeaway:
       'Un heap mantiene el mínimo en la raíz sin ordenar toda la colección. Al insertar, añade al final y sube intercambiando con el padre mientras viola la propiedad.',
-    code: 'heap.append(1)\ni = len(heap) - 1\nwhile i > 0:\n    padre = (i - 1) // 2\n    if heap[padre] <= heap[i]: break\n    heap[padre], heap[i] = heap[i], heap[padre]\n    i = padre',
+    snippet: {
+      code: {
+        python: [
+          'heap.append(1)',
+          'i = len(heap) - 1',
+          'while i > 0:',
+          '    padre = (i - 1) // 2',
+          '    if heap[padre] <= heap[i]: break',
+          '    heap[padre], heap[i] = heap[i], heap[padre]',
+          '    i = padre',
+        ],
+        cpp: [
+          'heap.push_back(1);',
+          'int i = (int)heap.size() - 1;',
+          'while (i > 0) {',
+          '    int padre = (i - 1) / 2;',
+          '    if (heap[padre] <= heap[i]) break;',
+          '    std::swap(heap[padre], heap[i]);',
+          '    i = padre;',
+          '}',
+        ],
+        go: [
+          'heap = append(heap, 1)',
+          'i := len(heap) - 1',
+          'for i > 0 {',
+          '    padre := (i - 1) / 2',
+          '    if heap[padre] <= heap[i] {',
+          '        break',
+          '    }',
+          '    heap[padre], heap[i] = heap[i], heap[padre]',
+          '    i = padre',
+          '}',
+        ],
+      },
+      lineMap: {
+        go: { 6: 8 },
+      },
+      notes: {
+        python: '// es división entera: descarta los decimales.',
+        cpp: 'Entre enteros, / ya es división entera.',
+        go: 'Entre enteros, / ya es división entera.',
+      },
+    },
     steps: [
       step(
-        'El 1 entra en el índice 4. Su padre está en (4 − 1) // 2 = 1, valor 4. ¿Qué haces?',
+        'El 1 entra en el índice 4. Su padre está en (4 − 1) / 2 = 1 (división entera), valor 4. ¿Qué haces?',
         ['Intercambiar 1 y 4', 'Dejarlo al final'],
         'Intercambiar 1 y 4',
         cells([2, 4, 7, 8, 1], 4, [], ['0', '1', '2', '3', '4']),
@@ -1248,7 +1831,45 @@ lessons.push(
       'Un trie comparte prefijos. Guardamos casa y cama: ambas comparten c → a y luego se separan. Una marca de fin distingue una palabra completa de un simple prefijo.',
     takeaway:
       'Un trie recorre caracteres en lugar de comparar palabras completas. Compartir un prefijo no significa que ese prefijo sea también una palabra almacenada.',
-    code: 'nodo = raiz\nfor letra in palabra:\n    if letra not in nodo.hijos:\n        nodo.hijos[letra] = Nodo()\n    nodo = nodo.hijos[letra]\nnodo.es_palabra = True',
+    snippet: {
+      code: {
+        python: [
+          'nodo = raiz',
+          'for letra in palabra:',
+          '    if letra not in nodo.hijos:',
+          '        nodo.hijos[letra] = Nodo()',
+          '    nodo = nodo.hijos[letra]',
+          'nodo.es_palabra = True',
+        ],
+        cpp: [
+          'Nodo* nodo = raiz;',
+          'for (char letra : palabra) {',
+          '    if (!nodo->hijos.count(letra))',
+          '        nodo->hijos[letra] = new Nodo();',
+          '    nodo = nodo->hijos[letra];',
+          '}',
+          'nodo->es_palabra = true;',
+        ],
+        go: [
+          'nodo := raiz',
+          'for _, letra := range palabra {',
+          '    if _, ok := nodo.hijos[letra]; !ok {',
+          '        nodo.hijos[letra] = &Nodo{hijos: map[rune]*Nodo{}}',
+          '    }',
+          '    nodo = nodo.hijos[letra]',
+          '}',
+          'nodo.es_palabra = true',
+        ],
+      },
+      lineMap: {
+        cpp: { 6: 7 },
+        go: { 6: 8 },
+      },
+      notes: {
+        cpp: 'hijos es un std::map<char, Nodo*>.',
+        go: 'hijos es un map[rune]*Nodo; range sobre un string entrega runas.',
+      },
+    },
     steps: [
       step(
         'Ya existe c → a → s → a para casa. Al insertar cama, ¿qué prefijo reutilizas?',
@@ -1268,7 +1889,7 @@ lessons.push(
         ['La c inicial', 'La a de la rama c → a → m → a', 'El prefijo c → a'],
         'La a de la rama c → a → m → a',
         stats({ camino: 'c → a → m → a', fin: 'sin marcar' }),
-        stats({ camino: 'c → a → m → a', es_palabra: 'True' }),
+        stats({ camino: 'c → a → m → a', es_palabra: 'verdadero' }),
         'La marca está en el último carácter del camino completo.',
         [
           'La palabra completa es cama, no ca.',
@@ -1331,7 +1952,37 @@ lessons.push({
     'Un grafo tiene nodos y aristas. Aquí cada letra es un lugar y cada línea, una calle de doble sentido. La lista de adyacencia guarda los vecinos directos de cada lugar.',
   takeaway:
     'Un grafo puede tener ciclos y múltiples caminos. Una lista de adyacencia describe vecinos; no exige que todo tenga un único padre, como un árbol enraizado.',
-  code: 'vecinos = {\n    "A": ["B", "C"],\n    "B": ["A", "D", "E"],\n    "C": ["A", "E"],\n    "D": ["B"],\n    "E": ["B", "C"],\n}',
+  snippet: {
+    code: {
+      python: [
+        'vecinos = {',
+        '    "A": ["B", "C"],',
+        '    "B": ["A", "D", "E"],',
+        '    "C": ["A", "E"],',
+        '    "D": ["B"],',
+        '    "E": ["B", "C"],',
+        '}',
+      ],
+      cpp: [
+        'std::map<char, std::vector<char>> vecinos = {',
+        "    {'A', {'B', 'C'}},",
+        "    {'B', {'A', 'D', 'E'}},",
+        "    {'C', {'A', 'E'}},",
+        "    {'D', {'B'}},",
+        "    {'E', {'B', 'C'}},",
+        '};',
+      ],
+      go: [
+        'vecinos := map[string][]string{',
+        '    "A": {"B", "C"},',
+        '    "B": {"A", "D", "E"},',
+        '    "C": {"A", "E"},',
+        '    "D": {"B"},',
+        '    "E": {"B", "C"},',
+        '}',
+      ],
+    },
+  },
   steps: [
     step(
       '¿Qué lugares tienen una calle directa con A?',
@@ -1382,7 +2033,59 @@ for (const config of [
       'Explora este mapa desde A usando una cola. Saca del frente, registra el lugar y agrega vecinos nuevos al final, en orden alfabético. Marcamos al encolar para no repetir.',
     takeaway:
       'BFS visita por capas de distancia. En un grafo sin pesos, descubre caminos con el menor número de aristas. El conjunto vistos evita repetir nodos en ciclos.',
-    code: 'from collections import deque\ncola, vistos = deque(["A"]), {"A"}\nwhile cola:\n    u = cola.popleft()\n    visitar(u)\n    for v in vecinos[u]:\n        if v not in vistos:\n            vistos.add(v)\n            cola.append(v)',
+    snippet: {
+      code: {
+        python: [
+          'from collections import deque',
+          'cola, vistos = deque(["A"]), {"A"}',
+          'while cola:',
+          '    u = cola.popleft()',
+          '    visitar(u)',
+          '    for v in vecinos[u]:',
+          '        if v not in vistos:',
+          '            vistos.add(v)',
+          '            cola.append(v)',
+        ],
+        cpp: [
+          'std::queue<char> cola;',
+          "std::set<char> vistos = {'A'};",
+          "cola.push('A');",
+          'while (!cola.empty()) {',
+          '    char u = cola.front();',
+          '    cola.pop();',
+          '    visitar(u);',
+          '    for (char v : vecinos[u]) {',
+          '        if (!vistos.count(v)) {',
+          '            vistos.insert(v);',
+          '            cola.push(v);',
+          '        }',
+          '    }',
+          '}',
+        ],
+        go: [
+          'cola := []string{"A"}',
+          'vistos := map[string]bool{"A": true}',
+          'for len(cola) > 0 {',
+          '    u := cola[0]',
+          '    cola = cola[1:]',
+          '    visitar(u)',
+          '    for _, v := range vecinos[u] {',
+          '        if !vistos[v] {',
+          '            vistos[v] = true',
+          '            cola = append(cola, v)',
+          '        }',
+          '    }',
+          '}',
+        ],
+      },
+      lineMap: {
+        cpp: { 5: 7 },
+        go: { 5: 6 },
+      },
+      notes: {
+        go: 'vistos funciona como conjunto: map[string]bool.',
+      },
+    },
   },
   {
     id: 'dfs',
@@ -1395,7 +2098,49 @@ for (const config of [
       'Recorre desde A con DFS recursivo. Registra al entrar y toma el primer vecino no visitado en orden alfabético. Si ya no hay ninguno, regresa a quien te llamó.',
     takeaway:
       'DFS profundiza antes de explorar las otras ramas. La pila de llamadas permite volver atrás. Un conjunto de visitados impide quedar atrapado en ciclos.',
-    code: 'vistos = set()\ndef dfs(u):\n    vistos.add(u)\n    visitar(u)\n    for v in vecinos[u]:\n        if v not in vistos:\n            dfs(v)\ndfs("A")',
+    snippet: {
+      code: {
+        python: [
+          'vistos = set()',
+          'def dfs(u):',
+          '    vistos.add(u)',
+          '    visitar(u)',
+          '    for v in vecinos[u]:',
+          '        if v not in vistos:',
+          '            dfs(v)',
+          'dfs("A")',
+        ],
+        cpp: [
+          'std::set<char> vistos;',
+          'void dfs(char u) {',
+          '    vistos.insert(u);',
+          '    visitar(u);',
+          '    for (char v : vecinos[u]) {',
+          '        if (!vistos.count(v)) {',
+          '            dfs(v);',
+          '        }',
+          '    }',
+          '}',
+          "dfs('A');",
+        ],
+        go: [
+          'var vistos = map[string]bool{}',
+          'func dfs(u string) {',
+          '    vistos[u] = true',
+          '    visitar(u)',
+          '    for _, v := range vecinos[u] {',
+          '        if !vistos[v] {',
+          '            dfs(v)',
+          '        }',
+          '    }',
+          '}',
+          'dfs("A")',
+        ],
+      },
+      notes: {
+        go: 'vistos funciona como conjunto: map[string]bool.',
+      },
+    },
   },
 ])
   lessons.push({
@@ -1406,7 +2151,7 @@ for (const config of [
     accent: config.accent,
     description: config.description,
     takeaway: config.takeaway,
-    code: config.code,
+    snippet: config.snippet,
     steps: config.order.map((n, i) =>
       step(
         i === 0
@@ -1478,7 +2223,46 @@ lessons.push(
       'Partes de A. La distancia tentativa es el mejor tiempo conocido hasta ahora. Fija el nodo pendiente con menor distancia y mejora las distancias de sus vecinos. ∞ significa que todavía no conocemos un camino.',
     takeaway:
       'Dijkstra fija la menor distancia pendiente y relaja las aristas. Necesita pesos no negativos. El camino con menos aristas no siempre pesa menos.',
-    code: 'dist = {"A": 0, "B": inf, "C": inf, "D": inf}\n# Extrae u con menor distancia pendiente.\nfor v, peso in vecinos[u]:\n    candidata = dist[u] + peso\n    if candidata < dist[v]:\n        dist[v] = candidata\n        anterior[v] = u',
+    snippet: {
+      code: {
+        python: [
+          'dist = {"A": 0, "B": inf, "C": inf, "D": inf}',
+          '# Extrae u con menor distancia pendiente.',
+          'for v, peso in vecinos[u]:',
+          '    candidata = dist[u] + peso',
+          '    if candidata < dist[v]:',
+          '        dist[v] = candidata',
+          '        anterior[v] = u',
+        ],
+        cpp: [
+          "std::map<char, int> dist = {{'A', 0}, {'B', INF}, {'C', INF}, {'D', INF}};",
+          '// Extrae u con menor distancia pendiente.',
+          'for (auto [v, peso] : vecinos[u]) {',
+          '    int candidata = dist[u] + peso;',
+          '    if (candidata < dist[v]) {',
+          '        dist[v] = candidata;',
+          '        anterior[v] = u;',
+          '    }',
+          '}',
+        ],
+        go: [
+          'dist := map[string]int{"A": 0, "B": inf, "C": inf, "D": inf}',
+          '// Extrae u con menor distancia pendiente.',
+          'for _, arista := range vecinos[u] {',
+          '    candidata := dist[u] + arista.peso',
+          '    if candidata < dist[arista.v] {',
+          '        dist[arista.v] = candidata',
+          '        anterior[arista.v] = u',
+          '    }',
+          '}',
+        ],
+      },
+      notes: {
+        python: 'inf representa ∞ (math.inf).',
+        cpp: 'INF representa ∞, por ejemplo std::numeric_limits<int>::max().',
+        go: 'inf representa ∞, por ejemplo math.MaxInt. Cada arista guarda v y peso.',
+      },
+    },
     steps: [
       step(
         'Tras fijar A: B cuesta 4 y C cuesta 1. ¿Qué nodo fijas ahora?',
@@ -1539,7 +2323,46 @@ lessons.push(
       'A = escribir código, B = compilar, C = probar y D = publicar. A debe ir antes que B y C; B y C antes que D. No hay ciclos. Cuando haya empate, elige la letra menor.',
     takeaway:
       'Un orden topológico coloca cada origen antes de su destino en un grafo dirigido acíclico (DAG). No es una ordenación por valor ni un recorrido inorder.',
-    code: 'while disponibles:\n    u = sacar_menor_letra(disponibles)\n    salida.append(u)\n    for v in siguientes[u]:\n        grado_entrada[v] -= 1\n        if grado_entrada[v] == 0:\n            disponibles.add(v)',
+    snippet: {
+      code: {
+        python: [
+          'while disponibles:',
+          '    u = sacar_menor_letra(disponibles)',
+          '    salida.append(u)',
+          '    for v in siguientes[u]:',
+          '        grado_entrada[v] -= 1',
+          '        if grado_entrada[v] == 0:',
+          '            disponibles.add(v)',
+        ],
+        cpp: [
+          'while (!disponibles.empty()) {',
+          '    char u = sacar_menor_letra(disponibles);',
+          '    salida.push_back(u);',
+          '    for (char v : siguientes[u]) {',
+          '        grado_entrada[v] -= 1;',
+          '        if (grado_entrada[v] == 0) {',
+          '            disponibles.insert(v);',
+          '        }',
+          '    }',
+          '}',
+        ],
+        go: [
+          'for len(disponibles) > 0 {',
+          '    u := sacar_menor_letra(disponibles)',
+          '    salida = append(salida, u)',
+          '    for _, v := range siguientes[u] {',
+          '        grado_entrada[v]--',
+          '        if grado_entrada[v] == 0 {',
+          '            disponibles[v] = true',
+          '        }',
+          '    }',
+          '}',
+        ],
+      },
+      notes: {
+        go: 'disponibles funciona como conjunto: map[string]bool.',
+      },
+    },
     steps: ['A', 'B', 'C', 'D'].map((n, i) => {
       const v = (count: number): View => ({
         kind: 'graph',
@@ -1602,7 +2425,42 @@ lessons.push(
       'Usamos 5 casilleros y hash(clave) = clave % 5. % devuelve el resto de la división. Guardaremos claves 12 y 17; con encadenamiento, cada casillero contiene una lista de entradas.',
     takeaway:
       'Una función hash decide un casillero, no identifica por sí sola la clave. Las colisiones son normales: la búsqueda debe comparar la clave completa dentro del casillero.',
-    code: 'indice = clave % 5\ncubetas[indice].append((clave, valor))\n\nfor k, v in cubetas[clave % 5]:\n    if k == clave:\n        return v',
+    snippet: {
+      code: {
+        python: [
+          'indice = clave % 5',
+          'cubetas[indice].append((clave, valor))',
+          '',
+          'for k, v in cubetas[clave % 5]:',
+          '    if k == clave:',
+          '        return v',
+        ],
+        cpp: [
+          'int indice = clave % 5;',
+          'cubetas[indice].push_back({clave, valor});',
+          '',
+          'for (auto [k, v] : cubetas[clave % 5]) {',
+          '    if (k == clave) {',
+          '        return v;',
+          '    }',
+          '}',
+        ],
+        go: [
+          'indice := clave % 5',
+          'cubetas[indice] = append(cubetas[indice], entrada{clave, valor})',
+          '',
+          'for _, e := range cubetas[clave%5] {',
+          '    if e.k == clave {',
+          '        return e.v',
+          '    }',
+          '}',
+        ],
+      },
+      notes: {
+        cpp: 'Cada cubeta es un std::vector<std::pair<int, int>>.',
+        go: 'Cada entrada guarda k (clave) y v (valor).',
+      },
+    },
     steps: [
       step(
         '12 dividido entre 5 deja resto 2. ¿En qué casillero guardas la clave 12?',
@@ -1673,7 +2531,44 @@ lessons.push(
       'En los precios ordenados [1, 3, 4, 6, 8], encuentra dos que sumen 10. Un puntero empieza a la izquierda y otro a la derecha. Compara su suma con el objetivo.',
     takeaway:
       'Con valores ordenados, una suma baja permite aumentar el puntero izquierdo; una suma alta permite reducir el derecho. Cada movimiento descarta candidatos con una razón.',
-    code: 'i, j = 0, len(precios) - 1\nwhile i < j:\n    total = precios[i] + precios[j]\n    if total == 10: return (i, j)\n    if total < 10: i += 1\n    else: j -= 1',
+    snippet: {
+      code: {
+        python: [
+          'i, j = 0, len(precios) - 1',
+          'while i < j:',
+          '    total = precios[i] + precios[j]',
+          '    if total == 10: return (i, j)',
+          '    if total < 10: i += 1',
+          '    else: j -= 1',
+        ],
+        cpp: [
+          'int i = 0, j = (int)precios.size() - 1;',
+          'while (i < j) {',
+          '    int total = precios[i] + precios[j];',
+          '    if (total == 10) return {i, j};',
+          '    if (total < 10) i++;',
+          '    else j--;',
+          '}',
+        ],
+        go: [
+          'i, j := 0, len(precios)-1',
+          'for i < j {',
+          '    total := precios[i] + precios[j]',
+          '    if total == 10 {',
+          '        return i, j',
+          '    }',
+          '    if total < 10 {',
+          '        i++',
+          '    } else {',
+          '        j--',
+          '    }',
+          '}',
+        ],
+      },
+      lineMap: {
+        go: { 4: 5, 5: 8, 6: 10 },
+      },
+    },
     steps: [
       step(
         'Los extremos suman 1 + 8 = 9. ¿Qué mueves?',
@@ -1744,7 +2639,36 @@ lessons.push(
       'Registraste [2, 1, 5, 1, 3] kilómetros. Encuentra la mayor suma de tres días consecutivos. Al mover una ventana, resta el día que sale y suma el que entra.',
     takeaway:
       'Una ventana deslizante reutiliza el resultado anterior. Para una suma de tamaño fijo, cada movimiento actualiza dos elementos en lugar de volver a sumar toda la ventana.',
-    code: 'suma = sum(km[:3])\nmejor = suma\nfor fin in range(3, len(km)):\n    suma += km[fin] - km[fin - 3]\n    mejor = max(mejor, suma)',
+    snippet: {
+      code: {
+        python: [
+          'suma = sum(km[:3])',
+          'mejor = suma',
+          'for fin in range(3, len(km)):',
+          '    suma += km[fin] - km[fin - 3]',
+          '    mejor = max(mejor, suma)',
+        ],
+        cpp: [
+          'int suma = std::accumulate(km.begin(), km.begin() + 3, 0);',
+          'int mejor = suma;',
+          'for (size_t fin = 3; fin < km.size(); fin++) {',
+          '    suma += km[fin] - km[fin - 3];',
+          '    mejor = std::max(mejor, suma);',
+          '}',
+        ],
+        go: [
+          'suma := km[0] + km[1] + km[2]',
+          'mejor := suma',
+          'for fin := 3; fin < len(km); fin++ {',
+          '    suma += km[fin] - km[fin-3]',
+          '    mejor = max(mejor, suma)',
+          '}',
+        ],
+      },
+      notes: {
+        go: 'max es una función integrada desde Go 1.21.',
+      },
+    },
     steps: [
       step(
         'Primera ventana: 2 + 1 + 5. ¿Cuál es su suma?',
@@ -1804,7 +2728,66 @@ lessons.push(
       'Usa dos dígitos diferentes de {1, 2, 3} que sumen 4. Empiezas probando 2. Si una rama no puede dar una solución, deshaz esa elección y explora otra.',
     takeaway:
       'Backtracking construye soluciones parciales, descarta ramas inválidas y restaura el estado para explorar alternativas. Deshacer la elección es parte del algoritmo.',
-    code: 'def buscar(actual):\n    if len(actual) == 2:\n        return actual.copy() if sum(actual) == 4 else None\n    for d in [2, 1, 3]:\n        if d in actual: continue\n        actual.append(d)\n        resultado = buscar(actual)\n        actual.pop()\n        if resultado is not None: return resultado\n    return None',
+    snippet: {
+      code: {
+        python: [
+          'def buscar(actual):',
+          '    if len(actual) == 2:',
+          '        return actual.copy() if sum(actual) == 4 else None',
+          '    for d in [2, 1, 3]:',
+          '        if d in actual: continue',
+          '        actual.append(d)',
+          '        resultado = buscar(actual)',
+          '        actual.pop()',
+          '        if resultado is not None: return resultado',
+          '    return None',
+        ],
+        cpp: [
+          'std::optional<std::vector<int>> buscar(std::vector<int>& actual) {',
+          '    if (actual.size() == 2)',
+          '        return actual[0] + actual[1] == 4 ? std::optional{actual} : std::nullopt;',
+          '    for (int d : {2, 1, 3}) {',
+          '        if (std::find(actual.begin(), actual.end(), d) != actual.end()) continue;',
+          '        actual.push_back(d);',
+          '        auto resultado = buscar(actual);',
+          '        actual.pop_back();',
+          '        if (resultado) return resultado;',
+          '    }',
+          '    return std::nullopt;',
+          '}',
+        ],
+        go: [
+          'func buscar(actual []int) []int {',
+          '    if len(actual) == 2 {',
+          '        if actual[0]+actual[1] == 4 {',
+          '            return slices.Clone(actual)',
+          '        }',
+          '        return nil',
+          '    }',
+          '    for _, d := range []int{2, 1, 3} {',
+          '        if slices.Contains(actual, d) {',
+          '            continue',
+          '        }',
+          '        actual = append(actual, d)',
+          '        resultado := buscar(actual)',
+          '        actual = actual[:len(actual)-1]',
+          '        if resultado != nil {',
+          '            return resultado',
+          '        }',
+          '    }',
+          '    return nil',
+          '}',
+        ],
+      },
+      lineMap: {
+        go: { 3: 4, 8: 14 },
+      },
+      notes: {
+        python: 'None indica que la rama no tiene solución.',
+        cpp: 'std::nullopt indica que la rama no tiene solución.',
+        go: 'nil indica que la rama no tiene solución.',
+      },
+    },
     steps: [
       step(
         'Elegiste 2 primero. Para sumar 4 necesitarías otro 2, pero no se puede repetir. ¿Qué haces?',
@@ -1853,7 +2836,30 @@ lessons.push(
       'Puedes subir 1 o 2 escalones cada vez. dp[n] guarda cuántas secuencias distintas llegan al escalón n. Para llegar a n, el último salto viene de n − 1 o n − 2.',
     takeaway:
       'La programación dinámica guarda soluciones de subproblemas. Aquí dp[n] = dp[n − 1] + dp[n − 2], con dp[0] = 1 (no dar pasos) y dp[1] = 1.',
-    code: 'dp = [0] * 5\ndp[0], dp[1] = 1, 1\nfor n in range(2, 5):\n    dp[n] = dp[n - 1] + dp[n - 2]',
+    snippet: {
+      code: {
+        python: [
+          'dp = [0] * 5',
+          'dp[0], dp[1] = 1, 1',
+          'for n in range(2, 5):',
+          '    dp[n] = dp[n - 1] + dp[n - 2]',
+        ],
+        cpp: [
+          'std::vector<int> dp(5, 0);',
+          'dp[0] = dp[1] = 1;',
+          'for (int n = 2; n < 5; n++) {',
+          '    dp[n] = dp[n - 1] + dp[n - 2];',
+          '}',
+        ],
+        go: [
+          'dp := make([]int, 5)',
+          'dp[0], dp[1] = 1, 1',
+          'for n := 2; n < 5; n++ {',
+          '    dp[n] = dp[n-1] + dp[n-2]',
+          '}',
+        ],
+      },
+    },
     steps: [
       step(
         'dp[0] = 1 y dp[1] = 1. ¿Cuánto vale dp[2]?',
@@ -1911,7 +2917,54 @@ lessons.push(
       'A y B están conectados; C y D también. Union–Find representa cada grupo con una raíz. find encuentra esa raíz y union combina dos grupos distintos.',
     takeaway:
       'Union–Find responde conectividad sin reconstruir caminos. Con compresión de caminos y unión por tamaño o rango, sus operaciones son casi constantes amortizadas.',
-    code: 'def find(x):\n    if parent[x] != x:\n        parent[x] = find(parent[x])\n    return parent[x]\n\nra, rb = find(a), find(b)\nif ra != rb:\n    if size[ra] < size[rb]: ra, rb = rb, ra\n    parent[rb] = ra\n    size[ra] += size[rb]',
+    snippet: {
+      code: {
+        python: [
+          'def find(x):',
+          '    if parent[x] != x:',
+          '        parent[x] = find(parent[x])',
+          '    return parent[x]',
+          '',
+          'ra, rb = find(a), find(b)',
+          'if ra != rb:',
+          '    if size[ra] < size[rb]: ra, rb = rb, ra',
+          '    parent[rb] = ra',
+          '    size[ra] += size[rb]',
+        ],
+        cpp: [
+          'int find(int x) {',
+          '    if (parent[x] != x)',
+          '        parent[x] = find(parent[x]);',
+          '    return parent[x];',
+          '}',
+          'int ra = find(a), rb = find(b);',
+          'if (ra != rb) {',
+          '    if (size[ra] < size[rb]) std::swap(ra, rb);',
+          '    parent[rb] = ra;',
+          '    size[ra] += size[rb];',
+          '}',
+        ],
+        go: [
+          'func find(x int) int {',
+          '    if parent[x] != x {',
+          '        parent[x] = find(parent[x])',
+          '    }',
+          '    return parent[x]',
+          '}',
+          'ra, rb := find(a), find(b)',
+          'if ra != rb {',
+          '    if size[ra] < size[rb] {',
+          '        ra, rb = rb, ra',
+          '    }',
+          '    parent[rb] = ra',
+          '    size[ra] += size[rb]',
+          '}',
+        ],
+      },
+      lineMap: {
+        go: { 6: 7, 7: 8, 9: 12 },
+      },
+    },
     steps: [
       step(
         'B tiene raíz A y C tiene raíz C. ¿Ya pertenecen al mismo grupo?',
@@ -1975,6 +3028,76 @@ lessons.push(
   },
 );
 
+const binarySearchSnippet: CodeSnippet = {
+  code: {
+    python: [
+      'while inicio <= fin:',
+      '    medio = (inicio + fin) // 2',
+      '    if medio < secreto: inicio = medio + 1',
+      '    elif medio > secreto: fin = medio - 1',
+      '    else: return medio',
+    ],
+    cpp: [
+      'while (inicio <= fin) {',
+      '    int medio = (inicio + fin) / 2;',
+      '    if (medio < secreto) inicio = medio + 1;',
+      '    else if (medio > secreto) fin = medio - 1;',
+      '    else return medio;',
+      '}',
+    ],
+    go: [
+      'for inicio <= fin {',
+      '    medio := (inicio + fin) / 2',
+      '    if medio < secreto {',
+      '        inicio = medio + 1',
+      '    } else if medio > secreto {',
+      '        fin = medio - 1',
+      '    } else {',
+      '        return medio',
+      '    }',
+      '}',
+    ],
+  },
+  lineMap: { go: { 3: 4, 4: 6, 5: 8 } },
+};
+const selectionSortSnippet: CodeSnippet = {
+  code: {
+    python: [
+      'for i in range(len(libros)):',
+      '    menor = i',
+      '    for j in range(i + 1, len(libros)):',
+      '        if libros[j] < libros[menor]:',
+      '            menor = j',
+      '    libros[i], libros[menor] = libros[menor], libros[i]',
+    ],
+    cpp: [
+      'for (size_t i = 0; i < libros.size(); i++) {',
+      '    size_t menor = i;',
+      '    for (size_t j = i + 1; j < libros.size(); j++) {',
+      '        if (libros[j] < libros[menor])',
+      '            menor = j;',
+      '    }',
+      '    std::swap(libros[i], libros[menor]);',
+      '}',
+    ],
+    go: [
+      'for i := range libros {',
+      '    menor := i',
+      '    for j := i + 1; j < len(libros); j++ {',
+      '        if libros[j] < libros[menor] {',
+      '            menor = j',
+      '        }',
+      '    }',
+      '    libros[i], libros[menor] = libros[menor], libros[i]',
+      '}',
+    ],
+  },
+};
+/** Fragmentos de los retos originales (búsqueda binaria y selección). */
+export const classicSnippets = {
+  binary: binarySearchSnippet,
+  books: selectionSortSnippet,
+};
 export const classicIds = ['number', 'building', 'books'];
 export const allLessonIds = [...lessons.map((l) => l.id), ...classicIds];
 export function moduleLessonIds(id: string) {

@@ -674,6 +674,18 @@ footer {
   .session-progress {
     font-size: 12px;
   }
+  .header-actions {
+    gap: 10px;
+  }
+  .header-language > svg,
+  .session-progress > span {
+    display: none;
+  }
+  .header-language .language-picker button {
+    min-height: 28px;
+    padding: 3px 9px;
+    font-size: 12px;
+  }
   .number-grid {
     gap: 3px;
   }
@@ -1140,6 +1152,119 @@ footer {
 .lesson-section .explanation pre code {
   white-space: normal;
 }
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+.header-language {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: #8e99a5;
+}
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+.language-picker {
+  display: inline-flex;
+  margin: 0;
+  min-width: 0;
+  padding: 3px;
+  gap: 2px;
+  border: 1px solid #303740;
+  border-radius: 999px;
+  background: #11161b;
+}
+.language-picker button {
+  min-height: 30px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: transparent;
+  color: #a2acb8;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1;
+  transition:
+    background 0.15s,
+    color 0.15s;
+}
+.language-picker button:hover {
+  color: #f1f3f5;
+}
+.language-picker button.selected {
+  background: var(--primary);
+  color: var(--primary-foreground);
+}
+.language-picker button:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+.language-picker.compact button {
+  min-height: 26px;
+  padding: 3px 10px;
+  font-size: 12px;
+}
+.code-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  margin-bottom: 12px;
+}
+.explanation .code-toolbar .code-note {
+  margin: 0;
+  flex: 1 1 220px;
+}
+.code-block {
+  margin: 0 0 16px;
+  border: 1px solid #303941;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #0a1015;
+}
+.code-block-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 7px 15px;
+  border-bottom: 1px solid #1f272f;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  color: #687b8a;
+}
+.code-lang-badge {
+  color: #d3f3a3;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+}
+.code-ext {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+.explanation .code-block pre {
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+}
+.code-block pre code {
+  white-space: normal;
+}
+.explanation .code-syntax-note {
+  font-size: 12px;
+  color: #8d9ead;
+  margin-top: -6px;
+}
 .network {
   height: 255px;
   position: relative;
@@ -1413,5 +1538,17 @@ html {
   }
   .state-values {
     grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 400px) {
+  .brand {
+    font-size: 24px;
+  }
+  .brand-symbol {
+    width: 30px;
+    height: 30px;
+  }
+  .header-language .language-picker button {
+    padding: 3px 7px;
   }
 }

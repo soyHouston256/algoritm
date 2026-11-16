@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
+  classicSnippets,
   lessons,
   modules,
   allLessonIds,
@@ -13,6 +14,12 @@ import {
   answerTransfer,
   revealHint,
 } from '../lib/lesson-engine.mjs';
+import {
+  codeLanguages,
+  defaultCodeLanguage,
+  isCodeLanguage,
+  resolveLine,
+} from '../lib/code-language.ts';
 const get = (id) => lessons.find((l) => l.id === id);
 
 test('The route covers each lesson once, with valid actions and drawable state', () => {
@@ -37,10 +44,19 @@ test('The route covers each lesson once, with valid actions and drawable state',
         lesson.id,
       );
       assert.equal(s.hints.length, 2);
-      assert.ok(
-        s.line >= 1 && s.line <= lesson.code.split('\n').length,
-        lesson.id,
-      );
+      for (const { id: language } of codeLanguages) {
+        const lines = lesson.snippet.code[language];
+        const line = resolveLine(lesson.snippet, language, s.line);
+        assert.ok(
+          line >= 1 && line <= lines.length,
+          `${lesson.id} ${language}`,
+        );
+        assert.match(
+          lines[line - 1],
+          /[^\s{}();]/,
+          `${lesson.id} ${language}: highlighted line ${line} has no content`,
+        );
+      }
       for (const view of [s.before, s.after]) {
         const ids = view.cells.map((c) => c.id);
         assert.equal(new Set(ids).size, ids.length);
@@ -263,4 +279,79 @@ test('Linked-list insertion preserves the tail and deletion bypasses one node', 
     'A',
     'C',
   ]);
+});
+test('Every snippet ships Python, C++ and Go variants with valid line maps', () => {
+  const ids = codeLanguages.map((l) => l.id);
+  assert.deepEqual(ids, ['python', 'cpp', 'go']);
+  /** @type {[string, import('../lib/lesson-types').CodeSnippet][]} */
+  const snippets = [
+    ...lessons.map((l) => /** @type {const} */ ([l.id, l.snippet])),
+    ...Object.entries(classicSnippets),
+  ];
+  assert.equal(snippets.length, 36);
+  for (const [id, snippet] of snippets) {
+    assert.deepEqual(Object.keys(snippet.code).sort(), [...ids].sort(), id);
+    for (const language of ids) {
+      const lines = snippet.code[language];
+      assert.ok(lines.length >= 2, `${id} ${language}`);
+      assert.ok(
+        lines.every((l) => typeof l === 'string' && !l.includes('\n')),
+        `${id} ${language}`,
+      );
+      assert.ok(
+        lines.some((l) => l.trim()),
+        `${id} ${language}`,
+      );
+    }
+    assert.equal(snippet.lineMap?.python, undefined, id);
+    for (const [language, map] of Object.entries(snippet.lineMap ?? {})) {
+      assert.ok(ids.includes(language), id);
+      for (const [from, to] of Object.entries(map)) {
+        assert.ok(
+          Number(from) >= 1 && Number(from) <= snippet.code.python.length,
+          `${id} ${language} maps unknown Python line ${from}`,
+        );
+        assert.ok(
+          to >= 1 && to <= snippet.code[language].length,
+          `${id} ${language} maps to missing line ${to}`,
+        );
+      }
+    }
+    for (const language of Object.keys(snippet.notes ?? {}))
+      assert.ok(ids.includes(language), id);
+  }
+  // Mapped C++/Go snippets highlight the equivalent statement.
+  const at = (id, language, line) => {
+    const l = get(id);
+    return l.snippet.code[language][
+      resolveLine(l.snippet, language, line) - 1
+    ].trim();
+  };
+  assert.equal(at('queue', 'cpp', 3), 'fila.pop_front();');
+  assert.equal(at('queue', 'go', 3), 'fila = fila[1:]');
+  assert.equal(at('recursion', 'go', 4), 'return n + suma(n-1)');
+  assert.equal(at('bfs', 'cpp', 5), 'visitar(u);');
+  assert.equal(at('bfs', 'go', 5), 'visitar(u)');
+  assert.equal(at('inorder', 'go', 4), 'visitar(nodo.dato)');
+  assert.equal(at('inorder', 'cpp', 4), 'visitar(nodo->dato);');
+  assert.equal(
+    at('heap', 'go', 6),
+    'heap[padre], heap[i] = heap[i], heap[padre]',
+  );
+  assert.equal(at('two-pointers', 'go', 6), 'j--');
+  assert.equal(at('union-find', 'go', 9), 'parent[rb] = ra');
+});
+test('Language helpers default to Python and map lines only when needed', () => {
+  assert.equal(defaultCodeLanguage, 'python');
+  assert.ok(isCodeLanguage('go'));
+  assert.ok(!isCodeLanguage('rust'));
+  assert.ok(!isCodeLanguage(null));
+  const snippet = {
+    code: { python: [], cpp: [], go: [] },
+    lineMap: { go: { 2: 5 } },
+  };
+  assert.equal(resolveLine(snippet, 'go', 2), 5);
+  assert.equal(resolveLine(snippet, 'go', 3), 3);
+  assert.equal(resolveLine(snippet, 'cpp', 2), 2);
+  assert.equal(resolveLine(snippet, 'python', undefined), undefined);
 });

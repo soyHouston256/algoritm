@@ -18,6 +18,8 @@ import {
   nextStep,
   revealHint,
 } from '../../lib/lesson-engine.mjs';
+import { codeLanguageInfo, resolveLine } from '../../lib/code-language';
+import { CodeBlock, LanguagePicker, useCodeLanguage } from './code-snippet';
 
 function Diagram({
   view,
@@ -199,6 +201,8 @@ export function LessonCard({
 }) {
   const [state, setState] = useState(initialLessonState);
   const [showCode, setShowCode] = useState(false);
+  const language = useCodeLanguage();
+  const languageInfo = codeLanguageInfo(language);
   const current = lesson.steps[state.index];
   const choose = (value: string) =>
     setState((s) => answerStep(lesson, s, value));
@@ -396,31 +400,34 @@ export function LessonCard({
             aria-controls={`${lesson.id}-code`}
           >
             <Code2 size={18} />
-            <span>Conecta el reto con Python</span>
+            <span>Conecta el reto con {languageInfo.label}</span>
             <span className="reveal-plus">{showCode ? '−' : '+'}</span>
           </button>
           {showCode && (
             <div className="explanation" id={`${lesson.id}-code`}>
-              <p className="code-note">
-                Fragmento guiado · la línea resaltada corresponde al paso
-                actual.
-              </p>
-              <pre>
-                <code>
-                  {lesson.code.split('\n').map((line, i) => (
-                    <span
-                      className={`code-line ${!state.transfer && i + 1 === current.line ? 'active-line' : ''}`}
-                      key={i}
-                    >
-                      <span className="line-number" aria-hidden="true">
-                        {i + 1}
-                      </span>
-                      {line || ' '}
-                      {'\n'}
-                    </span>
-                  ))}
-                </code>
-              </pre>
+              <div className="code-toolbar">
+                <p className="code-note">
+                  Fragmento guiado en {languageInfo.label} · la línea resaltada
+                  corresponde al paso actual.
+                </p>
+                <LanguagePicker compact />
+              </div>
+              <CodeBlock
+                lines={lesson.snippet.code[language]}
+                language={language}
+                activeLine={
+                  state.transfer
+                    ? undefined
+                    : resolveLine(lesson.snippet, language, current.line)
+                }
+              />
+              {(lesson.snippet.notes?.[language] || languageInfo.omitted) && (
+                <p className="code-syntax-note">
+                  {[lesson.snippet.notes?.[language], languageInfo.omitted]
+                    .filter(Boolean)
+                    .join(' ')}
+                </p>
+              )}
               <p>{lesson.takeaway}</p>
               {lesson.cost && <p className="small">{lesson.cost}</p>}
             </div>
